@@ -18,7 +18,7 @@ h1{margin:4px 0;font-size:1.5rem;font-weight:600;text-align:center}
 .hint{font-size:.95rem;color:var(--mu);text-align:center;padding:0 8px}
 .alarm{background:var(--wr);color:#fff;animation:p 1s infinite}@keyframes p{50%{opacity:.75}}
 .emo{font-size:5rem;line-height:1.2}
-#exFig{width:100%;height:210px;display:block}#exFig .fg{stroke:var(--ac);stroke-width:7;stroke-linecap:round;fill:none}#exFig .bk{opacity:.4}#exFig .hd{fill:var(--card);stroke:var(--ac);stroke-width:6}#exFig .pr{stroke:var(--mu);stroke-width:4;fill:none;stroke-linecap:round;opacity:.6}#exFig .sl{stroke:var(--ac);stroke-width:2.5;stroke-dasharray:5 6;animation:sl 1s linear infinite}@keyframes sl{to{stroke-dashoffset:-22}}.hidden{display:none!important}
+#exFig{width:100%;height:210px;display:block}#exFig .fg{stroke:var(--ac);stroke-width:7;stroke-linecap:round;fill:none}#exFig .bk{opacity:.4}#exFig .hd{fill:var(--card);stroke:var(--ac);stroke-width:6}#exFig .pr{stroke:var(--mu);stroke-width:4;fill:none;stroke-linecap:round;opacity:.6}#exFig .bl{stroke:var(--wr);stroke-width:9;stroke-linecap:round;opacity:.85}#exFig .sl{stroke:var(--ac);stroke-width:2.5;stroke-dasharray:5 6;animation:sl 1s linear infinite}@keyframes sl{to{stroke-dashoffset:-22}}.hidden{display:none!important}
 section{display:flex;flex-direction:column;gap:16px}.dur button:disabled{opacity:.45;cursor:default}
 .bar{height:8px;background:var(--ac2);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac);width:0}
 </style></head><body><main>
@@ -54,14 +54,16 @@ const mod=(b,c)=>({...b,...c}),mv=(b,dx,dy=0)=>Object.fromEntries(Object.entries
 const lim=(S,E1,W1,E2,W2,P,K1,F1,K2,F2)=>({S1:S,S2:S,E1,W1,E2,W2,P1:P,P2:P,K1,F1,K2,F2});
 const FB={H:[100,40],N:[100,58],S1:[80,64],S2:[120,64],E1:[74,95],E2:[126,95],W1:[72,124],W2:[128,124],P1:[90,128],P2:[110,128],K1:[89,163],K2:[111,163],F1:[88,198],F2:[112,198]};
 const SB={H:[104,40],N:[100,58],...lim([100,64],[104,95],[110,122],[97,95],[93,122],[100,128],[101,163],[102,198],[99,163],[98,198])};
-const roll=(dx,dy)=>mod(SB,{S1:[100+dx,64+dy],S2:[100+dx,64+dy],E1:[104+dx,95+dy],E2:[97+dx,95+dy],W1:[110+dx,122+dy],W2:[93+dx,122+dy]});
+const roll=(dx,dy)=>mod(FB,{S1:[80+dx,64+dy],S2:[120-dx,64+dy],E1:[74+dx,95+dy],E2:[126-dx,95+dy],W1:[72+dx,124+dy],W2:[128-dx,124+dy]});
+const GP=(i,y)=>({S1:[80+i,64],S2:[120-i,64],E1:[60+i*2,84+y],W1:[58+i*2,54+y],E2:[140-i*2,84+y],W2:[142-i*2,54+y],Q1:[87+i,70],R1:[83+i,96],Q2:[113-i,70],R2:[117-i,96]});
 const PR={ground:'<path class="pr" d="M38 200H182"/>',chair:'<path class="pr" d="M64 118V199M64 166H98V199"/>',wall:'<path class="pr" d="M153 30V199M153 50l8-8M153 80l8-8M153 110l8-8M153 140l8-8M153 170l8-8"/>',
  window:'<path class="pr" d="M150 34h38v44h-38zM169 34v44M150 56h38"/><line class="sl" x1="92" y1="40" x2="150" y2="52"/>'};
-PR.arc='<path class="pr" d="M118 52A20 20 0 1 0 120 76"/><path class="pr" d="M112 50l7 2-3 7"/>';
+PR.arc='<path class="pr" d="M68 70A13 13 0 1 1 90 58M86 52l5 6-7 2M132 70A13 13 0 1 0 110 58M114 52l-5 6 7 2"/>';
+PR.sq='<path class="pr" d="M66 112h14l-5-5M80 112l-5 5M134 112h-14l5-5M120 112l5 5"/>';
 const ANIM={
  neck:{side:0,d:900,h:500,f:[FB,mod(FB,{H:[86,45]}),FB,mod(FB,{H:[114,45]})]},
- roll:{side:1,d:380,h:0,p:'arc',f:[roll(0,-9),roll(-8,0),roll(0,7),roll(8,0)]},
- blade:{side:1,d:1000,h:1200,f:[mod(SB,{E1:[110,92],E2:[107,92],W1:[130,80],W2:[127,80]}),mod(SB,{S1:[96,64],S2:[96,64],H:[103,40],E1:[82,90],E2:[80,90],W1:[102,76],W2:[100,76]})]},
+ roll:{side:0,d:450,h:0,p:'arc',f:[roll(0,-13),roll(5,-6),roll(0,3),roll(-4,-5)]},
+ blade:{side:0,d:900,h:1500,p:'sq',x:[['Q1','R1'],['Q2','R2']],f:[mod(FB,GP(0,0)),mod(FB,GP(5,2))]},
  squat:{side:1,d:1300,h:250,p:'chair',f:[{H:[106,76],N:[100,94],...lim([100,100],[116,124],[134,120],[114,124],[131,121],[84,160],[118,162],[119,198],[116,162],[116,198])},
   {H:[120,40],N:[116,58],...lim([116,64],[128,92],[146,96],[126,92],[143,97],[112,128],[118,163],[119,198],[116,163],[116,198])}]},
  wall:{side:1,d:1100,h:150,p:'wall',f:[{H:[110,50],N:[103,66],...lim([102,70],[126,76],[150,80],[125,78],[149,83],[84,128],[73,163],[62,198],[71,163],[60,198])},
@@ -74,11 +76,11 @@ const SEG=[['N','S2'],['S2','E2'],['E2','W2'],['P2','K2'],['K2','F2'],['N','PM']
 let raf=0;
 function stopAnim(){cancelAnimationFrame(raf);raf=0}
 function startAnim(k){stopAnim();const a=ANIM[k],svg=$('exFig');if(!a){svg.innerHTML='';return}
- svg.innerHTML=PR.ground+(a.p?PR[a.p]:'')+SEG.map(([u,v])=>`<line class="fg${a.side&&(u+v).includes('2')?' bk':''}"/>`).join('')+'<circle class="hd" r="13"/>';
- const L=[...svg.querySelectorAll('line.fg')],C=svg.querySelector('.hd'),n=a.f.length,seg=a.d+a.h,t0=performance.now();
- const draw=now=>{const el=(now-t0)%(seg*n),i=Math.floor(el/seg),u0=Math.min(1,(el-i*seg)/a.d),u=.5-.5*Math.cos(Math.PI*u0),A=a.f[i],B=a.f[(i+1)%n];
+ svg.innerHTML=PR.ground+(a.p?PR[a.p]:'')+SEG.map(([u,v])=>`<line class="fg${a.side&&(u+v).includes('2')?' bk':''}"/>`).join('')+(a.x||[]).map(()=>'<line class="bl"/>').join('')+'<circle class="hd" r="13"/>';
+ const SG=SEG.concat(a.x||[]),L=[...svg.querySelectorAll('line.fg,line.bl')],C=svg.querySelector('.hd'),n=a.f.length,seg=a.d+a.h,t0=performance.now();
+ const draw=now=>{const el=Math.max(0,now-t0)%(seg*n),i=Math.floor(el/seg),u0=Math.min(1,(el-i*seg)/a.d),u=.5-.5*Math.cos(Math.PI*u0),A=a.f[i],B=a.f[(i+1)%n];
   const q=k=>k==='PM'?[(q('P1')[0]+q('P2')[0])/2,(q('P1')[1]+q('P2')[1])/2]:[A[k][0]+(B[k][0]-A[k][0])*u,A[k][1]+(B[k][1]-A[k][1])*u];
-  SEG.forEach(([s1,s2],j)=>{const p=q(s1),r=q(s2);L[j].setAttribute('x1',p[0]);L[j].setAttribute('y1',p[1]);L[j].setAttribute('x2',r[0]);L[j].setAttribute('y2',r[1])});
+  SG.forEach(([s1,s2],j)=>{const p=q(s1),r=q(s2);L[j].setAttribute('x1',p[0]);L[j].setAttribute('y1',p[1]);L[j].setAttribute('x2',r[0]);L[j].setAttribute('y2',r[1])});
   const h=q('H');C.setAttribute('cx',h[0]);C.setAttribute('cy',h[1]);raf=requestAnimationFrame(draw)};
  raf=requestAnimationFrame(draw)}
 
